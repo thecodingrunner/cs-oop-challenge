@@ -17,7 +17,7 @@ namespace Challenges.Tests
             int expected = 0;
             Assert.That(actual, Is.EqualTo(expected));
         }
-        [Test]
+        [Test, Order(1)]
         public void _3AccountsCreatedTest()
         {
             Assert.That(User.AccountsCreated, Is.EqualTo(0));
@@ -89,7 +89,7 @@ namespace Challenges.Tests
             var testUser1 = new User("testUser1", "test1@northcoders.com");
             Item testItem1 = new Item("testUser1", "testItemName1", 20, "test description1");
             var testUser2 = new User("testUser2", "test2@northcoders.com");
-            Item testItem2 = new Item("testUser2", "testItemNam2", 20, "test description2");
+            Item testItem2 = new Item("testUser2", "testItemName2", 30, "test description2");
             Assert.That(testUser1.PurchaseItem(testItem1), Is.EqualTo("This item belongs to you already!"));
             Assert.That(testUser1.PurchaseItem(testItem2), Is.EqualTo("Insufficient funds"));
             Assert.That(testUser1.CheckBalance(), Is.EqualTo(0));
