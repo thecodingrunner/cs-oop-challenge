@@ -3,14 +3,14 @@ namespace Challenges.Tests
     public class Tests
     {
         [Test]
-        public void UserPropertyTest()
+        public void _1UserPropertyTest()
         {
             var testUser = new User("test", "test@northcoders.com");
             Assert.That(testUser.Username, Is.EqualTo("test"));
-            Assert.That(testUser.UserEmail, Is.EqualTo("test@northcoders.com"));
+            Assert.That(testUser.Email, Is.EqualTo("test@northcoders.com"));
         }
         [Test]
-        public void CheckBalanceTest()
+        public void _2CheckBalanceTest()
         {
             var testUser = new User("test", "test@northcoders.com");
             int actual = testUser.CheckBalance();
@@ -18,7 +18,7 @@ namespace Challenges.Tests
             Assert.That(actual, Is.EqualTo(expected));
         }
         [Test]
-        public void AccountsCreatedTest()
+        public void _3AccountsCreatedTest()
         {
             Assert.That(User.AccountsCreated, Is.EqualTo(0));
             var testUser1 = new User("test1", "test1@northcoders.com");
@@ -27,7 +27,7 @@ namespace Challenges.Tests
             Assert.That(User.AccountsCreated, Is.EqualTo(2));
         }
         [Test]
-        public void AddBalanceTest()
+        public void _4AddBalanceTest()
         {
             var testUser = new User("test", "test@northcoders.com");
             testUser.AddBalance(50);
@@ -36,16 +36,16 @@ namespace Challenges.Tests
             Assert.That(testUser.CheckBalance(), Is.EqualTo(100));
         }
         [Test]
-        public void ItemPropertyTest()
+        public void _5ItemPropertyTest()
         {
             var testItem = new Item("testUser", "test", 10, "testing it out");
             Assert.That(testItem.Owner, Is.EqualTo("testUser"));
-            Assert.That(testItem.ItemName, Is.EqualTo("test"));
+            Assert.That(testItem.Name, Is.EqualTo("test"));
             Assert.That(testItem.Price, Is.EqualTo(10));
             Assert.That(testItem.Description, Is.EqualTo("testing it out"));
         }
         [Test]
-        public void ListItemTest()
+        public void _6ListItemTest()
         {
             var testUser = new User("testUser", "test@northcoders.com");
             string actual;
@@ -53,20 +53,20 @@ namespace Challenges.Tests
             actual = testUser.ListItem("testItemName1", 20, "test description1");
             expected = "testItemName1 has been listed for sale";
             Assert.That(actual, Is.EqualTo(expected));
-            Assert.That(testUser.ListedItems[0].Owner, Is.EqualTo("testUser"));
-            Assert.That(testUser.ListedItems[0].ItemName, Is.EqualTo("testItemName1"));
-            Assert.That(testUser.ListedItems[0].Price, Is.EqualTo(20));
-            Assert.That(testUser.ListedItems[0].Description, Is.EqualTo("test description1"));
+            Assert.That(testUser.ItemsForSale[0].Owner, Is.EqualTo("testUser"));
+            Assert.That(testUser.ItemsForSale[0].Name, Is.EqualTo("testItemName1"));
+            Assert.That(testUser.ItemsForSale[0].Price, Is.EqualTo(20));
+            Assert.That(testUser.ItemsForSale[0].Description, Is.EqualTo("test description1"));
             actual = testUser.ListItem("testItemName2", 20, "test description2");
             expected = "testItemName2 has been listed for sale";
             Assert.That(actual, Is.EqualTo(expected));
-            Assert.That(testUser.ListedItems[1].Owner, Is.EqualTo("testUser"));
-            Assert.That(testUser.ListedItems[1].ItemName, Is.EqualTo("testItemName2"));
-            Assert.That(testUser.ListedItems[1].Price, Is.EqualTo(20));
-            Assert.That(testUser.ListedItems[1].Description, Is.EqualTo("test description2"));
+            Assert.That(testUser.ItemsForSale[1].Owner, Is.EqualTo("testUser"));
+            Assert.That(testUser.ItemsForSale[1].Name, Is.EqualTo("testItemName2"));
+            Assert.That(testUser.ItemsForSale[1].Price, Is.EqualTo(20));
+            Assert.That(testUser.ItemsForSale[1].Description, Is.EqualTo("test description2"));
         }
         [Test]
-        public void ReduceBalanceTest()
+        public void _7ReduceBalanceTest()
         {
             var testUser = new User("testUser", "test@northcoders.com");
             testUser.AddBalance(50);
@@ -74,22 +74,22 @@ namespace Challenges.Tests
             Assert.That(testUser.CheckBalance(), Is.EqualTo(40));
         }
         [Test]
-        public void PurchaseItemTest()
+        public void _8PurchaseItemTest()
         {
             var testUser1 = new User("testUser1", "test@northcoders.com");
             var testUser2 = new User("testUser2", "test@northcoders.com");
             testUser2.AddBalance(50);
-            Item testItem = testUser1.ListItem("testItemName", 20, "test description");
+            Item testItem = new Item("testUser1", "testItemName", 20, "test description");
             Assert.That(testUser2.PurchaseItem(testItem), Is.EqualTo("Your purchase of testItemName has been confirmed!"));
             Assert.That(testUser2.CheckBalance(), Is.EqualTo(30));
         }
         [Test]
-        public void PurchaseItemValidationTest()
+        public void _9PurchaseItemValidationTest()
         {
             var testUser1 = new User("testUser1", "test1@northcoders.com");
-            Item testItem1 = testUser1.ListItem("testItemName1", 20, "test description 1");
+            Item testItem1 = new Item("testUser1", "testItemName1", 20, "test description1");
             var testUser2 = new User("testUser2", "test2@northcoders.com");
-            Item testItem2 = testUser2.ListItem("testItemName2", 30, "test description 2");
+            Item testItem2 = new Item("testUser2", "testItemNam2", 20, "test description2");
             Assert.That(testUser1.PurchaseItem(testItem1), Is.EqualTo("This item belongs to you already!"));
             Assert.That(testUser1.PurchaseItem(testItem2), Is.EqualTo("Insufficient funds"));
             Assert.That(testUser1.CheckBalance(), Is.EqualTo(0));
