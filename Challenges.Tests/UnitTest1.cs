@@ -1,3 +1,5 @@
+using FluentAssertions;
+
 namespace Challenges.Tests
 {
     public class Tests
@@ -6,10 +8,10 @@ namespace Challenges.Tests
         public void _1UserPropertyTest()
         {
             var testUser = new User("test", "test@northcoders.com");
-            Assert.That(testUser.Username, Is.EqualTo("test"));
-            Assert.That(testUser.Email, Is.EqualTo("test@northcoders.com"));
+            testUser.Username.Should().Be("test");
+            testUser.Email.Should().Be("test@northcoders.com");
         }
-        /* 
+        /*
         [Test]
         public void _2CheckBalanceTest()
         {
@@ -18,7 +20,6 @@ namespace Challenges.Tests
             int expected = 0;
             Assert.That(actual, Is.EqualTo(expected));
         }
-        */
         /*
         [Test]
         public void _3AccountsCreatedTest()
