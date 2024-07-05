@@ -7,117 +7,116 @@ namespace Challenges.Tests
         [Test]
         public void _1UserPropertyTest()
         {
-            var testUser = new User("test", "test@northcoders.com");
+            User testUser = new User("test", "test@northcoders.com");
             testUser.Username.Should().Be("test");
             testUser.Email.Should().Be("test@northcoders.com");
         }
-        
+        /*
         [Test]
-        public void _2CheckBalanceTest()
+        public void _2BalanceTest()
         {
-            var testUser = new User("test", "test@northcoders.com");
-            int actual = testUser.CheckBalance();
-            int expected = 0;
-            actual.Should().Be(expected);
+            User testUser = new User("test", "test@northcoders.com");
+            testUser.Balance.Should().Be(0);
         }
-        
-        
+        */
+        /*
         [Test]
-        public void _3AccountsCreatedTest()
+        public void _3UpdateBalanceTest()
+        {
+            User testUser = new User("test", "test@northcoders.com");
+            testUser.UpdateBalance(55);
+            testUser.Balance.Should().Be(55);
+            testUser.UpdateBalance(-5);
+            testUser.Balance.Should().Be(50);
+        }
+        */
+        /*
+        [Test]
+        public void _4AccountsCreatedTest()
         {
             User.ResetAccountsCount();
             User.AccountsCreated.Should().Be(0);
-            var testUser1 = new User("test1", "test1@northcoders.com");
+            new User("test1", "test1@northcoders.com");
             User.AccountsCreated.Should().Be(1);
-            var testUser2 = new User("test2", "test2@northcoders.com");
+            new User("test2", "test2@northcoders.com");
             User.AccountsCreated.Should().Be(2);
         }
-        
-        
-        [Test]
-        public void _4AddBalanceTest()
-        {
-            var testUser = new User("test", "test@northcoders.com");
-            testUser.AddBalance(50);
-            testUser.CheckBalance().Should().Be(50);
-            testUser.AddBalance(50);
-            testUser.CheckBalance().Should().Be(100);
-        }
-        
-        
+        */
+        /*
         [Test]
         public void _5ItemPropertyTest()
         {
-            var testItem = new Item("testUser", "test", 10, "testing it out");
+            Item testItem = new Item("testUser", "test", 10, "testing it out");
             testItem.Owner.Should().Be("testUser");
             testItem.Name.Should().Be("test");
             testItem.Price.Should().Be(10);
             testItem.Description.Should().Be("testing it out");
+
+            testItem.Owner = "newUser";
+            testItem.Owner.Should().Be("newUser");
+
+            testItem.Name = "new name";
+            testItem.Name.Should().Be("new name");
+
+            testItem.Price = 20;
+            testItem.Price.Should().Be(20);
+
+            testItem.Description = "new description";
+            testItem.Description.Should().Be("new description");
         }
-        
-        
+        */
+        /*
         [Test]
         public void _6ListItemTest()
         {
-            var testUser = new User("testUser", "test@northcoders.com");
-            string actual;
-            string expected;
-            actual = testUser.ListItem("testItemName1", 20, "test description1");
-            expected = "testItemName1 has been listed for sale";
-            actual.Should().Be(expected);
-            testUser.ItemsForSale[0].Owner.Should().Be("testUser");
-            testUser.ItemsForSale[0].Name.Should().Be("testItemName1");
-            testUser.ItemsForSale[0].Price.Should().Be(20);
-            testUser.ItemsForSale[0].Description.Should().Be("test description1");
-            actual = testUser.ListItem("testItemName2", 20, "test description2");
-            expected = "testItemName2 has been listed for sale";
-            actual.Should().Be(expected);
-            testUser.ItemsForSale[1].Owner.Should().Be("testUser");
-            testUser.ItemsForSale[1].Name.Should().Be("testItemName2");
-            testUser.ItemsForSale[1].Price.Should().Be(20);
-            testUser.ItemsForSale[1].Description.Should().Be("test description2");
-        }
-        
+            User testUser = new User("testUser", "test@northcoders.com");
 
-        [Test]
-        public void _7ReduceBalanceTest()
-        {
-            var testUser = new User("testUser", "test@northcoders.com");
-            testUser.AddBalance(50);
-            testUser.ReduceBalance(10);
-            testUser.CheckBalance().Should().Be(40);
+            Item firstItem = testUser.ListItem("testItemName1", 20, "test description1");
+            Item firstItemForSale = testUser.ItemsForSale[0];
+            firstItemForSale.Should().Be(firstItem);
+
+            Item secondItem = testUser.ListItem("testItemName2", 20, "test description2");
+            Item secondItemForSale = testUser.ItemsForSale[1];
+            secondItemForSale.Should().Be(secondItem);
         }
-        
-        
+        */
+        /*
         [Test]
-        public void _8PurchaseItemTest()
+        public void _7PurchaseItemTest()
         {
-            var testUser1 = new User("testUser1", "test@northcoders.com");
-            var testUser2 = new User("testUser2", "test@northcoders.com");
-            testUser1.AddBalance(50);
-            testUser2.ListItem("testItemName", 20, "test description");
-            var testItem = testUser2.ItemsForSale[0];
-            testUser1.PurchaseItem(testItem).Should().Be("Your purchase of testItemName has been confirmed!");
-            testUser1.CheckBalance().Should().Be(30);
+            User buyer = new User("testUser1", "test@northcoders.com");
+            User seller = new User("testUser2", "test@northcoders.com");
+            buyer.UpdateBalance(50);
+            seller.ListItem("testItemName", 20, "test description");
+            Item testItem = seller.ItemsForSale[0];
+            buyer.PurchaseItem(testItem).Should().Be(PurchaseResult.SUCCESS);
+            buyer.Balance.Should().Be(30);
         }
-        
-        
+        */
+        /*
         [Test]
-        public void _9PurchaseItemValidationTest()
+        public void _9PurchaseItemWithoutFundsTest()
         {
-            var testUser1 = new User("testUser1", "test1@northcoders.com");
-            testUser1.ListItem("testItemName1", 20, "test description1");
-            var testItem1 = testUser1.ItemsForSale[0];
-            var testUser2 = new User("testUser2", "test2@northcoders.com");
-            testUser2.ListItem("testItemName2", 20, "test description2");
-            var testItem2 = testUser2.ItemsForSale[0];
-            testUser1.PurchaseItem(testItem1).Should().Be("This item belongs to you already!");
-            testUser1.PurchaseItem(testItem2).Should().Be("Insufficient funds");
-            testUser1.CheckBalance().Should().Be(0);
-            testUser1.AddBalance(50);
-            testUser1.PurchaseItem(testItem2).Should().Be("Your purchase of testItemName2 has been confirmed!");
-            testUser1.CheckBalance().Should().Be(30);
+            User seller = new User("testUser1", "test1@northcoders.com");
+            Item item = seller.ListItem("testItemName1", 20, "test description1");
+
+            User buyer = new User("testUser2", "test2@northcoders.com");
+
+            buyer.PurchaseItem(item).Should().Be(PurchaseResult.INSUFFICIENT_FUNDS);
+
+            buyer.UpdateBalance(50);
+
+            buyer.PurchaseItem(item).Should().Be(PurchaseResult.SUCCESS);
         }
-        
+        */
+        /*
+        public void _9PurchaseOwnItemTest()
+        {
+            User seller = new User("testUser1", "test1@northcoders.com");
+            Item item = seller.ListItem("testItemName1", 20, "test description1");
+
+            seller.PurchaseItem(item).Should().Be(PurchaseResult.ALREADY_OWNED);
+        }
+        */
     }
 }
