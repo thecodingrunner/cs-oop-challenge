@@ -110,6 +110,7 @@ namespace Challenges.Tests
         }
         */
         /*
+        [Test]
         public void _9PurchaseOwnItemTest()
         {
             User seller = new User("testUser1", "test1@northcoders.com");
