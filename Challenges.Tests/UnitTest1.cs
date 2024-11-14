@@ -11,15 +11,15 @@ namespace Challenges.Tests
             testUser.Username.Should().Be("test");
             testUser.Email.Should().Be("test@northcoders.com");
         }
-        /*
+
         [Test]
         public void _2BalanceTest()
         {
             User testUser = new User("test", "test@northcoders.com");
             testUser.Balance.Should().Be(0);
         }
-        */
-        /*
+
+
         [Test]
         public void _3UpdateBalanceTest()
         {
@@ -29,8 +29,8 @@ namespace Challenges.Tests
             testUser.UpdateBalance(-5);
             testUser.Balance.Should().Be(50);
         }
-        */
-        /*
+
+
         [Test]
         public void _4AccountsCreatedTest()
         {
@@ -41,19 +41,19 @@ namespace Challenges.Tests
             new User("test2", "test2@northcoders.com");
             User.AccountsCreated.Should().Be(2);
         }
-        */
-        /*
+
+
         [Test]
         public void _5ItemPropertyTest()
         {
-            Item testItem = new Item("testUser", "test", 10, "testing it out");
-            testItem.Owner.Should().Be("testUser");
+            Item testItem = new Item(1, "test", 10, "testing it out");
+            testItem.Owner.Should().Be(1);
             testItem.Name.Should().Be("test");
             testItem.Price.Should().Be(10);
             testItem.Description.Should().Be("testing it out");
 
-            testItem.Owner = "newUser";
-            testItem.Owner.Should().Be("newUser");
+            testItem.Owner = 2;
+            testItem.Owner.Should().Be(2);
 
             testItem.Name = "new name";
             testItem.Name.Should().Be("new name");
@@ -64,60 +64,118 @@ namespace Challenges.Tests
             testItem.Description = "new description";
             testItem.Description.Should().Be("new description");
         }
-        */
-        /*
+
+
         [Test]
         public void _6ListItemTest()
         {
             User testUser = new User("testUser", "test@northcoders.com");
 
-            Item firstItem = testUser.ListItem("testItemName1", 20, "test description1");
-            Item firstItemForSale = testUser.ItemsForSale[0];
+            Market market = new Market();
+
+            Item firstItem = market.ListItem("testItemName1", 20, "test description1", testUser);
+            Item firstItemForSale = market.ItemsForSale[0];
             firstItemForSale.Should().Be(firstItem);
 
-            Item secondItem = testUser.ListItem("testItemName2", 20, "test description2");
-            Item secondItemForSale = testUser.ItemsForSale[1];
+            Item secondItem = market.ListItem("testItemName2", 20, "test description2", testUser);
+            Item secondItemForSale = market.ItemsForSale[1];
             secondItemForSale.Should().Be(secondItem);
         }
-        */
-        /*
+
+
         [Test]
         public void _7PurchaseItemTest()
         {
+            Market market = new Market();
             User buyer = new User("testUser1", "test@northcoders.com");
             User seller = new User("testUser2", "test@northcoders.com");
             buyer.UpdateBalance(50);
-            seller.ListItem("testItemName", 20, "test description");
-            Item testItem = seller.ItemsForSale[0];
-            buyer.PurchaseItem(testItem).Should().Be(PurchaseResult.SUCCESS);
+            market.ListItem("testItemName", 20, "test description", seller);
+            Item testItem = market.ItemsForSale[0];
+            market.PurchaseItem(testItem, seller, buyer).Should().Be(Enums.PurchaseResult.SUCCESS);
             buyer.Balance.Should().Be(30);
         }
-        */
-        /*
+
+
         [Test]
         public void _9PurchaseItemWithoutFundsTest()
         {
+            Market market = new Market();
             User seller = new User("testUser1", "test1@northcoders.com");
-            Item item = seller.ListItem("testItemName1", 20, "test description1");
+            Item item = market.ListItem("testItemName1", 20, "test description1", seller);
 
             User buyer = new User("testUser2", "test2@northcoders.com");
 
-            buyer.PurchaseItem(item).Should().Be(PurchaseResult.INSUFFICIENT_FUNDS);
+            market.PurchaseItem(item, seller, buyer).Should().Be(Enums.PurchaseResult.INSUFFICIENT_FUNDS);
 
             buyer.UpdateBalance(50);
 
-            buyer.PurchaseItem(item).Should().Be(PurchaseResult.SUCCESS);
+            market.PurchaseItem(item, seller, buyer).Should().Be(Enums.PurchaseResult.SUCCESS);
         }
-        */
-        /*
+
+
         [Test]
         public void _9PurchaseOwnItemTest()
         {
+            Market market = new Market();
             User seller = new User("testUser1", "test1@northcoders.com");
-            Item item = seller.ListItem("testItemName1", 20, "test description1");
+            Item item = market.ListItem("testItemName1", 20, "test description1", seller);
 
-            seller.PurchaseItem(item).Should().Be(PurchaseResult.ALREADY_OWNED);
+            market.PurchaseItem(item, seller, seller).Should().Be(Enums.PurchaseResult.ALREADY_OWNED);
         }
-        */
+
+        [Test]
+        public void _10ItemUnlisted()
+        {
+            Market market = new Market();
+            User seller = new User("testUser1", "test1@northcoders.com");
+            Item item = market.ListItem("testItemName1", 0, "test description1", seller);
+            User buyer = new User("testUser2", "test2@northcoders.com");
+
+            market.PurchaseItem(item, seller, buyer);
+
+            market.ItemsForSale.Should().BeEmpty();
+        }
+
+        [Test]
+        public void _11ThrowUsernameException()
+        {
+            Assert.Throws<ArgumentException>(() => new User("", "test1@northcoders.com"));
+        }
+
+        [Test]
+        public void _12ThrowEmailException()
+        {
+            Assert.Throws<ArgumentException>(() => new User("username", "test1@northcoderscom"));
+        }
+
+        [Test]
+        public void _13GetPrettyDate()
+        {
+            Market market = new Market();
+            User seller = new User("testUser1", "test1@northcoders.com");
+            Item item = market.ListItem("testItemName1", 0, "test description1", seller);
+            Assert.That(item.GetPrettyDateListed(), Is.TypeOf<string>());
+        }
+
+        [Test]
+        public void _14CheckItemIDs()
+        {
+            Market market = new Market();
+            User seller = new User("testUser1", "test1@northcoders.com");
+            Item item1 = market.ListItem("testItemName1", 0, "test description1", seller);
+            Item item2 = market.ListItem("testItemName2", 0, "test description2", seller);
+            Item item3 = market.ListItem("testItemName3", 0, "test description3", seller);
+            item3.ItemId.Should().Be(Item.ItemsCreated);
+        }
+
+        [Test]
+        public void _15CheckUserIDs()
+        {
+            var one = new User("testUser1", "test1@northcoders.com"); // ItemId is automatically set to 1
+            var two = new User("testUser2", "test2@northcoders.com"); // ItemId is automatically set to 2
+            var three = new User("testUser3", "test3@northcoders.com"); // ItemId is automatically set to 3
+            three.UserId.Should().Be(User.AccountsCreated);
+        }
     }
 }
