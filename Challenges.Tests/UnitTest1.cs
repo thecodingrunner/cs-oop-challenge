@@ -46,7 +46,7 @@ namespace Challenges.Tests
         [Test]
         public void _5ItemPropertyTest()
         {
-            Item testItem = new Item(1, "test", 10, "testing it out");
+            Item testItem = new Car(1, "test", 10, "testing it out");
             testItem.Owner.Should().Be(1);
             testItem.Name.Should().Be("test");
             testItem.Price.Should().Be(10);
@@ -73,11 +73,11 @@ namespace Challenges.Tests
 
             Market market = new Market();
 
-            Item firstItem = market.ListItem("testItemName1", 20, "test description1", testUser);
+            Item firstItem = market.ListItem(Enums.ItemType.APPLIANCE, "testItemName1", 20, "test description1", testUser);
             Item firstItemForSale = market.ItemsForSale[0];
             firstItemForSale.Should().Be(firstItem);
 
-            Item secondItem = market.ListItem("testItemName2", 20, "test description2", testUser);
+            Item secondItem = market.ListItem(Enums.ItemType.APPLIANCE, "testItemName2", 20, "test description2", testUser);
             Item secondItemForSale = market.ItemsForSale[1];
             secondItemForSale.Should().Be(secondItem);
         }
@@ -90,7 +90,7 @@ namespace Challenges.Tests
             User buyer = new User("testUser1", "test@northcoders.com");
             User seller = new User("testUser2", "test@northcoders.com");
             buyer.UpdateBalance(50);
-            market.ListItem("testItemName", 20, "test description", seller);
+            market.ListItem(Enums.ItemType.APPLIANCE, "testItemName", 20, "test description", seller);
             Item testItem = market.ItemsForSale[0];
             market.PurchaseItem(testItem, seller, buyer).Should().Be(Enums.PurchaseResult.SUCCESS);
             buyer.Balance.Should().Be(30);
@@ -102,7 +102,7 @@ namespace Challenges.Tests
         {
             Market market = new Market();
             User seller = new User("testUser1", "test1@northcoders.com");
-            Item item = market.ListItem("testItemName1", 20, "test description1", seller);
+            Item item = market.ListItem(Enums.ItemType.APPLIANCE, "testItemName1", 20, "test description1", seller);
 
             User buyer = new User("testUser2", "test2@northcoders.com");
 
@@ -119,7 +119,7 @@ namespace Challenges.Tests
         {
             Market market = new Market();
             User seller = new User("testUser1", "test1@northcoders.com");
-            Item item = market.ListItem("testItemName1", 20, "test description1", seller);
+            Item item = market.ListItem(Enums.ItemType.APPLIANCE, "testItemName1", 20, "test description1", seller);
 
             market.PurchaseItem(item, seller, seller).Should().Be(Enums.PurchaseResult.ALREADY_OWNED);
         }
@@ -129,7 +129,7 @@ namespace Challenges.Tests
         {
             Market market = new Market();
             User seller = new User("testUser1", "test1@northcoders.com");
-            Item item = market.ListItem("testItemName1", 0, "test description1", seller);
+            Item item = market.ListItem(Enums.ItemType.APPLIANCE, "testItemName1", 0, "test description1", seller);
             User buyer = new User("testUser2", "test2@northcoders.com");
 
             market.PurchaseItem(item, seller, buyer);
@@ -154,7 +154,7 @@ namespace Challenges.Tests
         {
             Market market = new Market();
             User seller = new User("testUser1", "test1@northcoders.com");
-            Item item = market.ListItem("testItemName1", 0, "test description1", seller);
+            Item item = market.ListItem(Enums.ItemType.APPLIANCE, "testItemName1", 0, "test description1", seller);
             Assert.That(item.GetPrettyDateListed(), Is.TypeOf<string>());
         }
 
@@ -163,9 +163,9 @@ namespace Challenges.Tests
         {
             Market market = new Market();
             User seller = new User("testUser1", "test1@northcoders.com");
-            Item item1 = market.ListItem("testItemName1", 0, "test description1", seller);
-            Item item2 = market.ListItem("testItemName2", 0, "test description2", seller);
-            Item item3 = market.ListItem("testItemName3", 0, "test description3", seller);
+            Item item1 = market.ListItem(Enums.ItemType.APPLIANCE, "testItemName1", 0, "test description1", seller);
+            Item item2 = market.ListItem(Enums.ItemType.APPLIANCE, "testItemName2", 0, "test description2", seller);
+            Item item3 = market.ListItem(Enums.ItemType.APPLIANCE, "testItemName3", 0, "test description3", seller);
             item3.ItemId.Should().Be(Item.ItemsCreated);
         }
 
@@ -176,6 +176,28 @@ namespace Challenges.Tests
             var two = new User("testUser2", "test2@northcoders.com"); // ItemId is automatically set to 2
             var three = new User("testUser3", "test3@northcoders.com"); // ItemId is automatically set to 3
             three.UserId.Should().Be(User.AccountsCreated);
+        }
+
+        [Test]
+        public void _16FilterCategories()
+        {
+            Market market = new Market();
+            User seller = new User("testUser1", "test1@northcoders.com");
+            Item item1 = market.ListItem(Enums.ItemType.APPLIANCE, "testItemName1", 0, "test description1", seller);
+            Item item2 = market.ListItem(Enums.ItemType.APPLIANCE, "testItemName2", 0, "test description2", seller);
+
+            Assert.That(market.FilterByCategory(Enums.ItemType.APPLIANCE), Is.TypeOf<List<Item>>());
+        }
+
+        [Test]
+        public void _17BrowseItems()
+        {
+            Market market = new Market();
+            User seller = new User("testUser1", "test1@northcoders.com");
+            Item item1 = market.ListItem(Enums.ItemType.APPLIANCE, "testItemName1", 0, "test description1", seller);
+            Item item2 = market.ListItem(Enums.ItemType.APPLIANCE, "testItemName2", 0, "test description2", seller);
+
+            Assert.That(market.BrowseItems(1), Is.TypeOf<List<Item>>());
         }
     }
 }

@@ -10,10 +10,29 @@ namespace Challenges
     {
         public List<Item> ItemsForSale = new List<Item>();
 
-        public Item ListItem(string name, int price, string description, User seller)
+        public Item ListItem(Enum itemType, string name, int price, string description, User seller)
         {
-            Item item = new Item(seller.UserId, name, price, description);
-            ItemsForSale.Add(item);
+            Item item;
+            switch (itemType)
+            {
+                case Enums.ItemType.CAR:
+                    item = new Car(seller.UserId, name, price, description);
+                    break;
+                case Enums.ItemType.FOOD:
+                    item = new Food(seller.UserId, name, price, description);
+                    break;
+                case Enums.ItemType.BOARDGAME:
+                    item = new BoardGame(seller.UserId, name, price, description);
+                    break;
+                case Enums.ItemType.APPLIANCE:
+                    item = new Appliance(seller.UserId, name, price, description);
+                    break;
+                default:
+                    item = new Appliance(seller.UserId, name, price, description);
+                    break;
+            }
+
+            if (item != null) ItemsForSale.Add(item);
             return item;
         }
 
@@ -60,5 +79,15 @@ namespace Challenges
         {
             return ItemsForSale.Where(item => item.ItemId == ItemId).ToList()[0];
         } 
+
+        public List<Item> FilterByCategory(Enum category)
+        {
+            return ItemsForSale.Where(item => item.ItemType == category).ToList();
+        }
+
+        public List<Item> BrowseItems(int userId)
+        {
+            return ItemsForSale.Where(item => item.Owner == userId).ToList();
+        }
     }
 }

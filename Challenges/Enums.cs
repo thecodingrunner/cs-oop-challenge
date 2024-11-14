@@ -14,5 +14,13 @@ namespace Challenges
             ALREADY_OWNED,
             INSUFFICIENT_FUNDS
         }
+
+        public enum ItemType
+        {
+            APPLIANCE,
+            BOARDGAME,
+            FOOD,
+            CAR
+        }
     }
 }
